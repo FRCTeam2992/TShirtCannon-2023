@@ -2,13 +2,20 @@
 using CTRE.Phoenix.Controller;
 using CTRE.Phoenix.MotorControl;
 using CTRE.Phoenix.MotorControl.CAN;
-using Microsoft.SPOT;
-using System;
-using System.Text;
 using System.Threading;
 
 namespace TShirtCannonStarter
 {
+    public enum DeviceIDs : int
+    {
+        DRIVE_LEFT_LEAD = 11,
+        DRIVE_LEFT_FOLLOW = 12,
+        DRIVE_RIGHT_LEAD = 13,
+        DRIVE_RIGHT_FOLLOW = 14,
+        ACTUATOR_MOTOR = 15,
+    }
+
+    
     public enum GamepadButtons : uint
     {
         BUTTON_1 = 1,
@@ -21,13 +28,22 @@ namespace TShirtCannonStarter
         RIGHT_TRIGGER = 8
     }
 
+    public enum GamepadAxes : uint
+    {
+        DRIVE_X = 0,
+        DRIVE_Y = 1,
+        TWIST = 2,
+    }
+
     public class Program
     {
-        static VictorSPX leftLead = new VictorSPX(11);
-        static VictorSPX leftFollow = new VictorSPX(12);
-        static VictorSPX rightLead = new VictorSPX(13);
-        static VictorSPX rightFollow = new VictorSPX(14);
-        static VictorSPX actuator = new VictorSPX(15);
+        static double ACTUATOR_DRIVE_POWER = 0.5;
+
+        static VictorSPX leftLead = new VictorSPX((int)DeviceIDs.DRIVE_LEFT_LEAD);
+        static VictorSPX leftFollow = new VictorSPX((int)DeviceIDs.DRIVE_LEFT_FOLLOW);
+        static VictorSPX rightLead = new VictorSPX((int)DeviceIDs.DRIVE_RIGHT_LEAD);
+        static VictorSPX rightFollow = new VictorSPX((int)DeviceIDs.DRIVE_RIGHT_FOLLOW);
+        static VictorSPX actuator = new VictorSPX((int)DeviceIDs.ACTUATOR_MOTOR);
 
         static CTRE.Phoenix.Controller.GameController _gamepad = null;
 
@@ -75,9 +91,9 @@ namespace TShirtCannonStarter
         static void Drive()
         {
             /* Get gamepad axis inputs */
-            float x = _gamepad.GetAxis(0);
-            float y = -1 * _gamepad.GetAxis(1);
-            float twist = _gamepad.GetAxis(2);
+            float x = _gamepad.GetAxis((uint)GamepadAxes.DRIVE_X);
+            float y = -1 * _gamepad.GetAxis((uint)GamepadAxes.DRIVE_Y);
+            float twist = _gamepad.GetAxis((uint)GamepadAxes.TWIST);
 
             /* Deadband gamepad axis inputs */
             float deadbandWidth = (float)0.10;
@@ -104,11 +120,11 @@ namespace TShirtCannonStarter
 
             if (actuatorUp)
             {
-                actuator.Set(ControlMode.PercentOutput, 0.5);
+                actuator.Set(ControlMode.PercentOutput, ACTUATOR_DRIVE_POWER);
             }
             else if (actuatorDown)
             {
-                actuator.Set(ControlMode.PercentOutput, -0.5);
+                actuator.Set(ControlMode.PercentOutput, -ACTUATOR_DRIVE_POWER);
             }
             else
             {
