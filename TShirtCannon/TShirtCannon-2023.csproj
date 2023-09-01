@@ -33,8 +33,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>TShirtCannon2023.RobotMain</StartupObject>
+  </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="Actuator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Barrel.cs" />
+    <Compile Include="ButtonMappings.cs" />
+    <Compile Include="ControlConstants.cs" />
+    <Compile Include="Drivetrain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
