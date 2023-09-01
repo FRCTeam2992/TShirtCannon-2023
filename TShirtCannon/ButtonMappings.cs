@@ -26,8 +26,8 @@ namespace TShirtCannon2023
 
     public enum GamepadAxes : uint
     {
-        DRIVE_X = 0,
-        DRIVE_Y = 1,
+        DRIVESTICK_DO_NOT_USE = 0,
+        DRIVE = 1,
         TWIST = 2,
     }
 }

@@ -12,7 +12,7 @@ namespace TShirtCannon2023
             DeviceIDs.DRIVE_LEFT_FOLLOW,
             DeviceIDs.DRIVE_RIGHT_LEAD,
             DeviceIDs.DRIVE_RIGHT_FOLLOW,
-            GamepadAxes.DRIVE_Y,
+            GamepadAxes.DRIVE,
             GamepadAxes.TWIST);
 
         static Actuator actuator = new Actuator(
