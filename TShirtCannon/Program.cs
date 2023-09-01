@@ -4,7 +4,7 @@ using CTRE.Phoenix.MotorControl;
 using CTRE.Phoenix.MotorControl.CAN;
 using System.Threading;
 
-namespace TShirtCannonStarter
+namespace TShirtCannon2023
 {
     public enum DeviceIDs : int
     {
@@ -15,7 +15,6 @@ namespace TShirtCannonStarter
         ACTUATOR_MOTOR = 15,
     }
 
-    
     public enum GamepadButtons : uint
     {
         BUTTON_1 = 1,
@@ -92,7 +91,7 @@ namespace TShirtCannonStarter
         {
             /* Get gamepad axis inputs */
             float x = _gamepad.GetAxis((uint)GamepadAxes.DRIVE_X);
-            float y = -1 * _gamepad.GetAxis((uint)GamepadAxes.DRIVE_Y);
+            float y = _gamepad.GetAxis((uint)GamepadAxes.DRIVE_Y);
             float twist = _gamepad.GetAxis((uint)GamepadAxes.TWIST);
 
             /* Deadband gamepad axis inputs */
@@ -102,8 +101,8 @@ namespace TShirtCannonStarter
             Deadband(ref twist, deadbandWidth);
 
             /* Compute throttle for each side of the robot */
-            float leftThrot = y + twist;
-            float rightThrot = y - twist;
+            float leftThrot = y - twist;
+            float rightThrot = y + twist;
 
             /* Set the motor percent output on each motor
              * based on the computed throttle. */
@@ -144,13 +143,11 @@ namespace TShirtCannonStarter
                 {
                     /* For testing only. This should trigger the spike for
                      * high pressure shot from high barrel. */
-                    // actuator.Set(ControlMode.PercentOutput, 1.0);
                 }
                 else
                 {
                     /* For testing only. This should trigger the spike for
                      * low pressure shot from high barrel. */
-                    // actuator.Set(ControlMode.PercentOutput, 0.3);
                 }
             }
             else
@@ -158,7 +155,6 @@ namespace TShirtCannonStarter
                 /* For testing only. This should ensure we don't
                  * trigger the high barrel for some number of cycles
                  * after a shot. */
-                // actuator.Set(ControlMode.PercentOutput, 0.0);
             }
         }
 
@@ -174,13 +170,11 @@ namespace TShirtCannonStarter
                 {
                     /* For testing only. This should trigger the spike for
                      * high pressure shot from low barrel. */
-                    // actuator.Set(ControlMode.PercentOutput, -1.0);
                 }
                 else
                 {
                     /* For testing only. This should trigger the spike for
                      * low pressure shot from low barrel. */
-                    // actuator.Set(ControlMode.PercentOutput, -0.3);
                 }
             }
             else
@@ -188,7 +182,6 @@ namespace TShirtCannonStarter
                 /* For testing only. This should ensure we don't
                  * trigger the low barrel for some number of cycles
                  * after a shot. */
-                // actuator.Set(ControlMode.PercentOutput, 0.0);
             }
         }
     }
