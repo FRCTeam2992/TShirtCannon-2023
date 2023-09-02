@@ -46,7 +46,7 @@
     <Compile Include="ControlConstants.cs" />
     <Compile Include="Drivetrain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="RobotMain.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CTRE, Version=4.4.0.4, Culture=neutral, processorArchitecture=MSIL">
