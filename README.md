@@ -64,11 +64,11 @@ output from the spike) for states mapped to differing shot executions:
 | Signal 2 ON  |   MED AIR    |    HI AIR    |
 
 In code, this is controlled through two GPIO ports, one for each signal line
-to the spike relay. These are mapped to button inputs controlling whether the
-signal lines are triggered which tied to low pressure shots and high pressure
-shots respectively. Shots are executed by a third button mapped for a shot for
-each barrel, and shots are debounced to happen for a triggering happening for
-a duration of one robot cycle in a given interval of a few seconds.
+to the spike relay. These are mapped to button inputs indicating whether to
+shoot high, medium, or low air shots. Barrel selection is done by a separate
+button mapping, and the barrel selection must be held while the shot is
+triggered. Shots are debounced to happen for each barrel triggering happening
+for a duration of one robot cycle in a given interval of a few seconds.
 
 ### Supporting code files
 
