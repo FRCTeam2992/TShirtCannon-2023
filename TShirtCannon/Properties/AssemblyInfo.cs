@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("HERO Arcade Drive Example1")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("TShirtCannon")]
+[assembly: AssemblyDescription("FRC Team 2992 T-Shirt Cannon 2023")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("HERO Arcade Drive Example1")]
+[assembly: AssemblyCompany("Mandeville High School Robotics Team")]
+[assembly: AssemblyProduct("TShirtCannon")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
