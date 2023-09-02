@@ -68,6 +68,11 @@ namespace TShirtCannon2023.Subsystems
                     spikeLow.Write(false);
                 }
             }
+            else
+            {
+                spikeHigh.Write(false);
+                spikeLow.Write(false);
+            }
         }
 
         private bool debounceShot()
