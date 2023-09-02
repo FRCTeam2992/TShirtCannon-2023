@@ -60,8 +60,8 @@ output from the spike) for states mapped to differing shot executions:
 
 |              | Signal 1 OFF | Signal 1 ON  |
 |--------------|--------------|--------------|
-| Signal 2 OFF |    NO SHOT   | LOW PRESSURE |
-| Signal 2 ON  |  HI PRESSURE | MED PRESSURE |
+| Signal 2 OFF |   NO SHOT    |   LOW AIR    |
+| Signal 2 ON  |   MED AIR    |    HI AIR    |
 
 In code, this is controlled through two GPIO ports, one for each signal line
 to the spike relay. These are mapped to button inputs controlling whether the
