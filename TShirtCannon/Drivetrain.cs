@@ -79,8 +79,8 @@ namespace TShirtCannon2023.Subsystems
         private float[] computeThrottle(float forwardAxis, float twistAxis)
         {
             /* Square inputs to smooth low-speed drive */
-            float forward = forwardAxis * forwardAxis;
-            float twist = twistAxis * twistAxis;
+            float forward = forwardAxis * forwardAxis * (float)Math.Sign(forwardAxis);
+            float twist = twistAxis * twistAxis * (float)Math.Sign(twistAxis);
 
             /* Compute throttle for each side of the robot
              * via constant-curvature drive */
