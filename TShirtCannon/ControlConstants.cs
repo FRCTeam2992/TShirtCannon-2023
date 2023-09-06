@@ -1,5 +1,11 @@
 namespace TShirtCannon2023
 {
+    public enum RobotModes
+    {
+        DISABLED,
+        ENABLED
+    }
+
     public enum DeviceIDs : int
     {
         DRIVE_LEFT_LEAD = 11,
