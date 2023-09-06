@@ -1,6 +1,7 @@
 using CTRE.Phoenix.Controller;
 using CTRE.Phoenix.MotorControl;
 using CTRE.Phoenix.MotorControl.CAN;
+using System;
 
 namespace TShirtCannon2023.Subsystems
 {
@@ -37,9 +38,10 @@ namespace TShirtCannon2023.Subsystems
             forward = deadband(forward, DrivetrainConstants.DEADBAND_WIDTH);
             twist = deadband(twist, DrivetrainConstants.DEADBAND_WIDTH);
 
-            /* Compute throttle for each side of the robot */
-            float leftThrot = forward - twist;
-            float rightThrot = forward + twist;
+            /* Compute throttles */
+            float[] throttles = computeThrottle(forward, twist);
+            float leftThrot = throttles[0];
+            float rightThrot = throttles[1];
 
             /* Set the motor percent output on each motor
              * based on the computed throttle. */
@@ -70,6 +72,37 @@ namespace TShirtCannon2023.Subsystems
                 /* within the percent width so zero it */
                 return (float)0.0;
             }
+        }
+
+        /* Compute an array of smoothed (via squaring and constant curvature
+         * throttles for left and right drive motors */
+        private float[] computeThrottle(float forwardAxis, float twistAxis)
+        {
+            /* Square inputs to smooth low-speed drive */
+            float forward = forwardAxis * forwardAxis;
+            float twist = twistAxis * twistAxis;
+
+            /* Compute throttle for each side of the robot
+             * via constant-curvature drive */
+            float posForward = (float)Math.Abs(forward);
+
+            float leftThrot = forward - posForward * twist;
+            float rightThrot = forward + posForward * twist;
+
+            /* Scale by maxOutput to ensure no more than 100% power */
+            float maxOutput = (float)Math.Max(
+                Math.Abs(forwardAxis),
+                Math.Abs(twistAxis));
+
+            if (maxOutput > (float)1.0)
+            {
+                leftThrot /= maxOutput;
+                rightThrot /= maxOutput;
+            }
+
+            /* Return throttles array */
+            float[] throttles = { leftThrot, rightThrot };
+            return throttles;
         }
     }
 }
