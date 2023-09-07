@@ -32,6 +32,12 @@ namespace TShirtCannon2023.Subsystems
             debounceCounter = 0;
         }
 
+        public void disable()
+        {
+            spikeHigh.Write(false);
+            spikeLow.Write(false);
+        }
+
         public void executeCycle(GameController gamepad)
         {
             if (debounceShot())

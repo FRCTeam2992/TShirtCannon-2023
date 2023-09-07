@@ -18,6 +18,11 @@ namespace TShirtCannon2023.Subsystems
             downButton = down;
         }
 
+        public void disable()
+        {
+            actuator.Set(ControlMode.PercentOutput, 0.0);
+        }
+
         public void executeCycle(GameController gamepad)
         {
             bool actuatorUp = gamepad.GetButton((uint)upButton);

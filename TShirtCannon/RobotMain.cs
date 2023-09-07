@@ -37,6 +37,7 @@ namespace TShirtCannon2023
         static CTRE.Phoenix.Controller.GameController _gamepad = null;
 
         static RobotModes robotMode = RobotModes.DISABLED;
+        static bool feedDevices = false;
 
         public static void Main()
         {
@@ -47,47 +48,68 @@ namespace TShirtCannon2023
                     _gamepad = new GameController(UsbHostDevice.GetInstance());
 
                 /* enable the robot? */
-                robotMode = getRobotMode(_gamepad, robotMode);
-                /* drive robot using gamepad */
-                drivetrain.executeCycle(_gamepad);
-                /* control linear actuator for aim */
-                actuator.executeCycle(_gamepad);
-                /* shoot t-shirts out of the cannon barrels */
-                highBarrel.executeCycle(_gamepad);
-                lowBarrel.executeCycle(_gamepad);
+                robotMode = getRobotModeAndSetFeed(_gamepad, robotMode);
 
-                if (robotMode == RobotModes.ENABLED)
+                switch (robotMode)
+                {
+                    case RobotModes.ENABLED:
+                        /* drive robot using gamepad */
+                        drivetrain.executeCycle(_gamepad);
+                        /* control linear actuator for aim */
+                        actuator.executeCycle(_gamepad);
+                        /* shoot t-shirts out of the cannon barrels */
+                        highBarrel.executeCycle(_gamepad);
+                        lowBarrel.executeCycle(_gamepad);
+                        break;
+                    case RobotModes.DISABLED:
+                        /* disable the drivetrain */
+                        drivetrain.disable();
+                        /* disable the linear actuator */
+                        actuator.disable();
+                        /* disable the cannon barrels */
+                        highBarrel.disable();
+                        lowBarrel.disable();
+                        break;
+                }
+
+                if (feedDevices)
                 {
                     /* feed watchdog to keep all devices enabled */
                     CTRE.Phoenix.Watchdog.Feed();
                 }
+
                 /* run this task every 20ms */
                 Thread.Sleep(20);
             }
         }
 
-        static RobotModes getRobotMode(GameController gamepad, RobotModes currentMode)
+        static RobotModes getRobotModeAndSetFeed(GameController gamepad, RobotModes currentMode)
         {
-            if (gamepad == null)
+            bool disableRobot;
+            if (gamepad == null ||
+                gamepad.GetConnectionStatus() == UsbDeviceConnection.NotConnected)
             {
-                return RobotModes.DISABLED;
+                disableRobot = true;
             }
-            if (gamepad.GetConnectionStatus() == UsbDeviceConnection.NotConnected)
+            else
             {
-                return RobotModes.DISABLED;
+                disableRobot = gamepad.GetButton(
+                    (uint)GamepadButtonMappings.DISABLE_ROBOT);
             }
-            
             bool enableRobot = gamepad.GetButton(
                 (uint)GamepadButtonMappings.ENABLE_ROBOT);
-            bool disableRobot = gamepad.GetButton(
-                (uint)GamepadButtonMappings.DISABLE_ROBOT);
 
+            feedDevices = (currentMode == RobotModes.ENABLED);
             if (enableRobot && !disableRobot)
             {
                 return RobotModes.ENABLED;
             }
             if (disableRobot)
             {
+                /* On a switch to disabled, ensure that we feed
+                 * devices for one more cycle to zero values
+                 */
+                feedDevices = true;
                 return RobotModes.DISABLED;
             }
             return currentMode;

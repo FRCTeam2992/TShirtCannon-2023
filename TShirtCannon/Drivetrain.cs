@@ -49,6 +49,14 @@ namespace TShirtCannon2023.Subsystems
             rightFollow.Set(ControlMode.PercentOutput, -rightThrot);
         }
 
+        public void disable()
+        {
+            leftLead.Set(ControlMode.PercentOutput, 0.0);
+            leftFollow.Set(ControlMode.PercentOutput, 0.0);
+            rightLead.Set(ControlMode.PercentOutput, 0.0);
+            rightFollow.Set(ControlMode.PercentOutput, 0.0);
+        }
+
         /**
          * If value is within 10% of center, clear it.
          * @param value [out] floating point value to deadband.
