@@ -113,12 +113,8 @@ namespace TShirtCannon2023.Subsystems
             float forward = smoothInput(forwardAxis);
             float twist = smoothInput(twistAxis);
 
-            /* Compute throttle for each side of the robot
-             * via constant-curvature drive */
-            float posForward = (float)Math.Abs(forward);
-
-            float leftThrot = forward - posForward * twist;
-            float rightThrot = forward + posForward * twist;
+            float leftThrot = forward - DrivetrainConstants.TWIST_SCALING * twist;
+            float rightThrot = forward + DrivetrainConstants.TWIST_SCALING * twist;
 
             /* Scale by maxOutput to ensure no more than 100% power */
             float maxOutput = (float)Math.Max(
