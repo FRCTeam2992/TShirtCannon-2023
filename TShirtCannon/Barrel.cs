@@ -9,8 +9,9 @@ namespace TShirtCannon2023.Subsystems
         private SafeOutputPort spikeLow;
 
         private GamepadButtonMappings shootTrigger;
-        private GamepadButtonMappings highPressure;
-        private GamepadButtonMappings lowPressure;
+        private GamepadButtonMappings highShot;
+        private GamepadButtonMappings mediumShot;
+        private GamepadButtonMappings lowShot;
 
         private uint debounceCounter;
 
@@ -18,13 +19,15 @@ namespace TShirtCannon2023.Subsystems
             Microsoft.SPOT.Hardware.Cpu.Pin spikeHighPin,
             Microsoft.SPOT.Hardware.Cpu.Pin spikeLowPin,
             GamepadButtonMappings shootTrigger,
-            GamepadButtonMappings highPressure,
-            GamepadButtonMappings lowPressure
+            GamepadButtonMappings highShot,
+            GamepadButtonMappings mediumShot,
+            GamepadButtonMappings lowShot
         )
         {
             this.shootTrigger = shootTrigger;
-            this.highPressure = highPressure;
-            this.lowPressure = lowPressure;
+            this.highShot = highShot;
+            this.mediumShot = mediumShot;
+            this.lowShot = lowShot;
 
             spikeHigh = new SafeOutputPort(spikeHighPin, false);
             spikeLow = new SafeOutputPort(spikeLowPin, false);
@@ -37,12 +40,16 @@ namespace TShirtCannon2023.Subsystems
             if (debounceShot())
             {
                 bool shootBarrel = gamepad.GetButton((uint)shootTrigger);
-                bool pressureLow = gamepad.GetButton((uint)lowPressure);
-                bool pressureHigh = gamepad.GetButton((uint)highPressure);
+                bool triggerSpikeLow = (
+                    gamepad.GetButton((uint)lowShot) || gamepad.GetButton((uint)highShot)
+                );
+                bool triggerSpikeHigh = (
+                    gamepad.GetButton((uint)mediumShot) || gamepad.GetButton((uint)highShot)
+                );
 
                 if (shootBarrel)
                 {
-                    if (pressureHigh)
+                    if (triggerSpikeHigh)
                     {
                         spikeHigh.Write(true);
                     }
@@ -51,7 +58,7 @@ namespace TShirtCannon2023.Subsystems
                         spikeHigh.Write(false);
                     }
 
-                    if (pressureLow)
+                    if (triggerSpikeLow)
                     {
                         spikeLow.Write(true);
                     }
