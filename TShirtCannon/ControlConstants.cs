@@ -19,7 +19,9 @@ namespace TShirtCannon2023
 
     public class DrivetrainConstants
     {
-        public static float DEADBAND_WIDTH = (float)0.10;
+        public static float DEADBAND_THRESHOLD = (float)0.10;
+        public static float STICK_GAIN_FACTOR = (float)0.90;
+        public static float STICK_INV_DEADBAND = (float)0.0;
     }
 
     public class ShootingConstants
