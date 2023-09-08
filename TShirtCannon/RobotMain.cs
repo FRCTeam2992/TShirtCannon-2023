@@ -24,15 +24,17 @@ namespace TShirtCannon2023
             DigitalIOPins.HIGH_BARREL_HIGH_PRESSURE,
             DigitalIOPins.HIGH_BARREL_LOW_PRESSURE,
             GamepadButtonMappings.HIGH_BARREL_SHOOT,
-            GamepadButtonMappings.HIGH_BARREL_HIGH_PRESSURE,
-            GamepadButtonMappings.HIGH_BARREL_LOW_PRESSURE);
+            GamepadButtonMappings.HIGH_SHOT,
+            GamepadButtonMappings.MEDIUM_SHOT,
+            GamepadButtonMappings.LOW_SHOT);
 
         static Barrel lowBarrel = new Barrel(
             DigitalIOPins.LOW_BARREL_HIGH_PRESSURE,
             DigitalIOPins.LOW_BARREL_LOW_PRESSURE,
             GamepadButtonMappings.LOW_BARREL_SHOOT,
-            GamepadButtonMappings.LOW_BARREL_HIGH_PRESSURE,
-            GamepadButtonMappings.LOW_BARREL_LOW_PRESSURE);
+            GamepadButtonMappings.HIGH_SHOT,
+            GamepadButtonMappings.MEDIUM_SHOT,
+            GamepadButtonMappings.LOW_SHOT);
 
         static CTRE.Phoenix.Controller.GameController _gamepad = null;
 
