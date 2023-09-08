@@ -118,8 +118,8 @@ namespace TShirtCannon2023.Subsystems
 
             /* Scale by maxOutput to ensure no more than 100% power */
             float maxOutput = (float)Math.Max(
-                Math.Abs(forwardAxis),
-                Math.Abs(twistAxis));
+                Math.Abs(leftThrot),
+                Math.Abs(rightThrot));
 
             if (maxOutput > (float)1.0)
             {
