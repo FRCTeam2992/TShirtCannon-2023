@@ -9,7 +9,10 @@ namespace TShirtCannon2023
         LEFT_BUMPER = 5,
         RIGHT_BUMPER = 6,
         LEFT_TRIGGER = 7,
-        RIGHT_TRIGGER = 8
+        RIGHT_TRIGGER = 8,
+        SELECT_BUTTON = 9,
+        START_BUTTON = 10,
+        EXTRA_BUTTON = 11
     }
 
     public enum GamepadButtonMappings : uint
@@ -21,6 +24,8 @@ namespace TShirtCannon2023
         HIGH_SHOT = GamepadButtons.BUTTON_4,
         ACTUATOR_UP = GamepadButtons.LEFT_BUMPER,
         ACTUATOR_DOWN = GamepadButtons.LEFT_TRIGGER,
+        ENABLE_ROBOT = GamepadButtons.START_BUTTON,
+        DISABLE_ROBOT = GamepadButtons.SELECT_BUTTON
     }
 
     public enum GamepadAxes : uint
