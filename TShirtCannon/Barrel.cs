@@ -13,7 +13,10 @@ namespace TShirtCannon2023.Subsystems
         private GamepadButtonMappings mediumShot;
         private GamepadButtonMappings lowShot;
 
-        private uint debounceCounter;
+        private int debounceCounter;
+        private uint shotCounter;
+
+        private BarrelShotTypes currentShot = BarrelShotTypes.NOT_SHOOTING;
 
         public Barrel(
             Microsoft.SPOT.Hardware.Cpu.Pin spikeHighPin,
@@ -33,41 +36,67 @@ namespace TShirtCannon2023.Subsystems
             spikeLow = new SafeOutputPort(spikeLowPin, false);
 
             debounceCounter = 0;
+            shotCounter = 0;
+
+            currentShot = BarrelShotTypes.NOT_SHOOTING;
         }
 
         public void executeCycle(GameController gamepad)
         {
             if (debounceShot())
             {
-                bool shootBarrel = gamepad.GetButton((uint)shootTrigger);
-                bool triggerSpikeLow = (
-                    gamepad.GetButton((uint)lowShot) || gamepad.GetButton((uint)highShot)
-                );
-                bool triggerSpikeHigh = (
-                    gamepad.GetButton((uint)mediumShot) || gamepad.GetButton((uint)highShot)
-                );
+                // Debounce has counted all required wait cycles,
+                // so we can try to shoot again
 
-                if (shootBarrel)
+                // If this is the first cycle of a potential shot,
+                // we need to read the gamepad buttons to set the shot type
+                if (shotCounter == 0 && !shooting())
                 {
-                    if (triggerSpikeHigh)
+                    bool shootBarrel = gamepad.GetButton((uint)shootTrigger);
+                    if (shootBarrel && currentShot == BarrelShotTypes.NOT_SHOOTING)
                     {
-                        spikeHigh.Write(true);
+                        // Get shot selection
+                        if (gamepad.GetButton((uint)lowShot))
+                        {
+                            currentShot = BarrelShotTypes.LOW_AIR_VOLUME;
+                        }
+                        else if (gamepad.GetButton((uint)mediumShot))
+                        {
+                            currentShot = BarrelShotTypes.MED_AIR_VOLUME;
+                        }
+                        else if (gamepad.GetButton((uint)highShot))
+                        {
+                            currentShot = BarrelShotTypes.HIGH_AIR_VOLUME;
+                        }
                     }
-                    else
-                    {
-                        spikeHigh.Write(false);
-                    }
+                }
 
-                    if (triggerSpikeLow)
-                    {
-                        spikeLow.Write(true);
-                    }
-                    else
-                    {
-                        spikeLow.Write(false);
-                    }
+                if (shooting())
+                {
+                    // Read shot type to set what to tell spikes
+                    bool triggerSpikeLow = (
+                        currentShot == BarrelShotTypes.LOW_AIR_VOLUME ||
+                        currentShot == BarrelShotTypes.HIGH_AIR_VOLUME
+                    );
+                    bool triggerSpikeHigh = (
+                        currentShot == BarrelShotTypes.MED_AIR_VOLUME ||
+                        currentShot == BarrelShotTypes.HIGH_AIR_VOLUME
+                    );
 
-                    debounceCounter = 0;
+                    // Write to spikes
+                    spikeHigh.Write(triggerSpikeHigh);
+                    spikeLow.Write(triggerSpikeLow);
+
+                    // Track shot cycles expired
+                    shotCounter++;
+
+                    if (shotCounter >= ShootingConstants.SHOT_CYCLES)
+                    {
+                        // When max shot cycles expired, reset and start debounce
+                        debounceCounter = ShootingConstants.DEBOUNCE_WAIT_CYCLES;
+                        currentShot = BarrelShotTypes.NOT_SHOOTING;
+                        shotCounter = 0;
+                    }
                 }
                 else
                 {
@@ -82,10 +111,15 @@ namespace TShirtCannon2023.Subsystems
             }
         }
 
+        private bool shooting()
+        {
+            return currentShot != BarrelShotTypes.NOT_SHOOTING;
+        }
+
         private bool debounceShot()
         {
-            debounceCounter++;
-            return debounceCounter > ShootingConstants.DEBOUNCE_WAIT_CYCLES;
+            debounceCounter--;
+            return debounceCounter <= 0;
         }
     }
 }

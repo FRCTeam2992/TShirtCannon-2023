@@ -57,7 +57,7 @@ namespace TShirtCannon2023
                 /* feed watchdog to keep all devices enabled */
                 CTRE.Phoenix.Watchdog.Feed();
                 /* run this task every 20ms */
-                Thread.Sleep(20);
+                Thread.Sleep(RobotConstants.robotCycleTimeMs);
             }
         }
     }
