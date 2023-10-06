@@ -1,5 +1,13 @@
 namespace TShirtCannon2023
 {
+    public enum BarrelShotTypes
+    {
+        NOT_SHOOTING,
+        LOW_AIR_VOLUME,
+        MED_AIR_VOLUME,
+        HIGH_AIR_VOLUME
+    }
+    
     public enum DeviceIDs : int
     {
         DRIVE_LEFT_LEAD = 11,
@@ -17,6 +25,12 @@ namespace TShirtCannon2023
         public static Microsoft.SPOT.Hardware.Cpu.Pin LOW_BARREL_HIGH_PRESSURE = CTRE.HERO.IO.Port6.Pin5;
     }
 
+    public class RobotConstants
+    {
+        public static int robotCycleTimeMs = 10;
+        public static double codeExecutionTimeMs = 5.8;
+    }
+
     public class DrivetrainConstants
     {
         public static float DEADBAND_THRESHOLD = (float)0.10;
@@ -27,8 +41,10 @@ namespace TShirtCannon2023
 
     public class ShootingConstants
     {
-        // 3 seconds at 50 cycles (20ms each) per second
-        public static uint DEBOUNCE_WAIT_CYCLES = 3 * 50;
+        // n seconds at (robotCycleTimeMs each) per second
+        public static int DEBOUNCE_WAIT_CYCLES = (int)(2.0 * (1000.0/RobotConstants.robotCycleTimeMs));
+        // Keep air open for this many cycles (robotCycleTimeMs each)
+        public static uint SHOT_CYCLES = 3;
     }
 
     public class ActuatorConstants
