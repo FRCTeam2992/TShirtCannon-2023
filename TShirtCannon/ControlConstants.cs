@@ -37,6 +37,11 @@ namespace TShirtCannon2023
         public static float STICK_GAIN_FACTOR = (float)0.90;
         public static float STICK_INV_DEADBAND = (float)0.0;
         public static float TWIST_SCALING = (float)1.0;
+        /* Applying ramp rate of 0.5 seconds to full power
+         * (RobotConstants.robotCycleTimeMs / 1000.0) Seconds / 0.5 Seconds
+         */
+        public static double MAX_CHANGE_PER_CYCLE = 0.02;
+        
     }
 
     public class ShootingConstants
