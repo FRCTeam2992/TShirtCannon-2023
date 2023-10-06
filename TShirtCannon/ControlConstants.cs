@@ -27,7 +27,8 @@ namespace TShirtCannon2023
 
     public class RobotConstants
     {
-        public static int robotCycleTimeMs = 20;
+        public static int robotCycleTimeMs = 10;
+        public static double codeExecutionTimeMs = 5.8;
     }
 
     public class DrivetrainConstants
@@ -40,10 +41,10 @@ namespace TShirtCannon2023
 
     public class ShootingConstants
     {
-        // 2 seconds at 50 cycles (20ms each) per second
-        public static int DEBOUNCE_WAIT_CYCLES = 2 * 50;
-        // Keep air open for this many cycles (20ms each)
-        public static uint SHOT_CYCLES = 5;
+        // n seconds at (robotCycleTimeMs each) per second
+        public static int DEBOUNCE_WAIT_CYCLES = (int)(2.0 * (1000.0/RobotConstants.robotCycleTimeMs));
+        // Keep air open for this many cycles (robotCycleTimeMs each)
+        public static uint SHOT_CYCLES = 3;
     }
 
     public class ActuatorConstants
