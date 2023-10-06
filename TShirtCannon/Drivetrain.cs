@@ -15,6 +15,9 @@ namespace TShirtCannon2023.Subsystems
         private GamepadAxes forwardAxis;
         private GamepadAxes twistAxis;
 
+        private double leftPrevThrottle = 0.0;
+        private double rightPrevThrottle = 0.0;
+
         public Drivetrain(
             DeviceIDs leftLead, DeviceIDs leftFollow,
             DeviceIDs rightLead, DeviceIDs rightFollow,
@@ -24,8 +27,11 @@ namespace TShirtCannon2023.Subsystems
             this.leftFollow = new VictorSPX((int)leftFollow);
             this.rightLead = new VictorSPX((int)rightLead);
             this.rightFollow = new VictorSPX((int)rightFollow);
+
             this.forwardAxis = forwardAxis;
             this.twistAxis = twistAxis;
+
+            this.resetSlewRateLimit();
         }
 
         public void executeCycle(GameController gamepad)
@@ -40,6 +46,10 @@ namespace TShirtCannon2023.Subsystems
 
             /* Compute throttles */
             float[] throttles = computeThrottle(forward, twist);
+
+            /* Slew rate limit outputs */
+            throttles = slewRateLimit(throttles);
+
             float leftThrot = throttles[0];
             float rightThrot = throttles[1];
 
@@ -130,6 +140,41 @@ namespace TShirtCannon2023.Subsystems
             /* Return throttles array */
             float[] throttles = { leftThrot, rightThrot };
             return throttles;
+        }
+
+        private float[] slewRateLimit(float[] throttles)
+        {
+            double leftThrot = throttles[0];
+            double rightThrot = throttles[1];
+
+            leftPrevThrottle += 
+                Math.Min(
+                    Math.Max(
+                        leftThrot - leftPrevThrottle,
+                        -DrivetrainConstants.MAX_CHANGE_PER_CYCLE
+                    ),
+                    DrivetrainConstants.MAX_CHANGE_PER_CYCLE
+                );
+            rightPrevThrottle +=
+                Math.Min(
+                    Math.Max(
+                        rightThrot - rightPrevThrottle,
+                        -DrivetrainConstants.MAX_CHANGE_PER_CYCLE
+                    ),
+                    DrivetrainConstants.MAX_CHANGE_PER_CYCLE
+                );
+
+            float[] newThrottles = {
+                (float)leftPrevThrottle,
+                (float)rightPrevThrottle
+            };
+            return newThrottles;
+        }
+
+        private void resetSlewRateLimit()
+        {
+            leftPrevThrottle = 0;
+            rightPrevThrottle = 0;
         }
     }
 }
